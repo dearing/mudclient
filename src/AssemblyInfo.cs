@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MUD-Client")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("mudclient")]
+[assembly: AssemblyDescription("A simple mudclient for the simple man.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MUD Client")]
-[assembly: AssemblyCopyright("Copyright © JD Dearing 2009")]
+[assembly: AssemblyProduct("mudclient")]
+[assembly: AssemblyCopyright("Copyright © Jacob Dearing 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -20,7 +20,8 @@ namespace mudclient
 
         static void Main(string[] args)
         {
-            Setup(); Console.WriteLine("{0} - {1}\n{2}\n", Name.ToUpper(), Description, VersionTag);
+            Setup(); 
+            //Console.WriteLine("{0} - {1}\n{2}\n", Name.ToUpper(), Description, VersionTag);
 
             _host = "127.0.0.1";
             _port = "4000";
@@ -28,8 +29,9 @@ namespace mudclient
             switch (args.Length)
             {
                 case 0:
-                    PrintError("No arguments defined defaulting to {0}:{1}.\n",_host,_port);
-                    break;
+                    // PrintError("No arguments defined defaulting to {0}:{1}.\n",_host,_port);
+                    PrintError("No arguments passed try `{0} [hostname] [port]`", Name);
+                    return;
                 case 1:
                     PrintError("Optional paramater Host needs a Port.");
                     return;
@@ -40,6 +42,7 @@ namespace mudclient
                     break;
             }
 
+            Console.WriteLine("{0} - {1}\n{2}\n", Name.ToUpper(), Description, VersionTag);
             ClientConnect(_host, _port);
 
             while (Running)

@@ -39,10 +39,10 @@ namespace mudclient
         {
             set
             {
-                // TODO: When this gets set we lock the Thread and intiate a network send.
-                Monitor.Enter(this);
+                lock (this)
+                {
                     Send(value);
-                Monitor.Exit(this);
+                }
             }
         }
         public Boolean Connected 
@@ -178,7 +178,7 @@ namespace mudclient
                     }
                 }
             }
-            catch (Exception e)
+            catch (SocketException e)
             {
                 RaiseNetworkStateChange(NetworkStates.Error, e.Message);
             }

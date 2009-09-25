@@ -23,6 +23,7 @@ namespace mudclient
 
         #endregion Fields
 
+        // Rewrite this to be faster and less obtuse.
         public static void ParseColor(String Message)
         {
             Message = Message.Replace("\r\n\0", Environment.NewLine);

@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <!-- mudclient by Jacob Dearing // NAnt build script-->
 
 <project name="mudclient" default="build">
@@ -49,7 +49,7 @@
   </target>
 
   <target name="install" depends="build-release" description="copy a relase build to a specified working folder">
-  <copy file="${build.dir}/${basename}-${nant.settings.currentframework}.exe" todir="${install.dir}" />
+	<copy file="${build.dir}/${basename}-${nant.settings.currentframework}.exe" todir="${install.dir}" />
   </target>
  
 </project>
