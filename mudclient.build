@@ -7,83 +7,49 @@
   <property name="install.dir" value="Z:/.bin"/>
   <property name="build.date" value=""/>
   
+  	<target name="net-2.0" description="Sets framework to .NET 2.0">
+		<property name="nant.settings.currentframework" value="net-2.0" />
+    </target>
+    <target name="net-3.5" description="Sets framework to .NET 3.5">
+        <property name="nant.settings.currentframework" value="net-3.5" />
+    </target>
+
+	<target name="mono-1.0" description="Sets framework to mono 1.0">
+		<property name="nant.settings.currentframework" value="mono-1.0" />
+    </target>    
+	<target name="mono-2.0" description="Sets framework to mono 2.0">
+		<property name="nant.settings.currentframework" value="mono-2.0" />
+    </target>
+  
   <target name="build" depends="build-release" description="Calls build-release."/>
   <target name="rebuild" depends="clean, build-release" description="Calls clean and then calls build-release." />
 
   <target name="clean" description="Deletes the 'bin' directory.">
     <delete verbose="True" dir="${build.dir}" />
-	<delete verbose="True" dir="vs9/obj" />
-	<delete verbose="True" dir="vs9/bin" />
+	<delete verbose="True" failonerr="False" dir="vs9/obj" />
+	<delete verbose="True" failonerr="False" dir="vs9/bin" />
   </target>
-
-  <target name="build-debug" description="Build an non-optimized assembly plus the debug symbols.">
+    
+  <target name="build-debug" description="build an non-optimized assembly with debug symbols.">
     <mkdir dir="${build.dir}" />
-    <csc target="exe" output="${build.dir}/${basename}-debug.exe" debug="true">
+    <csc target="exe" output="${build.dir}/${basename}-debug-${nant.settings.currentframework}.exe" debug="true">
       <sources>
         <include name="src/*.cs"/>
       </sources>
     </csc>
   </target>
 
-  <target name="build-release" description="Build an optimized assembly minus the debug symbols.">
+  <target name="build-release" description="build an optimized assembly minus the debug symbols.">
     <mkdir dir="${build.dir}" />
-    <csc target="exe" output="${build.dir}/${basename}.exe" debug="false" optimize="true" doc="${build.dir}/${basename}.xml">
+    <csc target="exe" output="${build.dir}/${basename}-${nant.settings.currentframework}.exe" debug="false" optimize="true">
       <sources>
         <include name="src/*.cs"/>
-
       </sources>
     </csc>
-	<echo message="Built -> ${assemblyname::get-version(assemblyname::get-assembly-name('bin/mudclient.exe'))}" />
   </target>
 
-  <target name="build-docs" depends="build-release" description="Recompile the help files.">
-    <ndoc>
-      <assemblies basedir="${build.dir}">
-        <include name="${basename}.exe" />
-      </assemblies>
-      <summaries basedir="${build.dir}">
-        <include name="${basename}.xml" />
-      </summaries>
-      <documenters>
-        <documenter name="MSDN">
-          <property name="OutputDirectory" value="doc/temp" />
-          <property name="HtmlHelpName" value="${basename}" />
-          <property name="HtmlHelpCompilerFilename" value="hhc.exe" />
-          <property name="Title" value="${basename} documentation" />
-		  <property name="ShowVisualBasic" value="True" />
-          <property name="DocumentInternals" value="True" />
-          <property name="DocumentProtected" value="True" />
-          <property name="DocumentPrivates"  value="True" />
-          <property name="DocumentAttributes" value="True" />
-          <property name="IncludeAssemblyVersion" value="True" />
-          <property name="CopyrightText" value="Jacob Dearing" />
-        </documenter>
-      </documenters>
-    </ndoc>
-	<move file="doc/temp/siege.chm" todir="doc"/>
+  <target name="install" depends="build-release" description="copy a relase build to a specified working folder">
+  <copy file="${build.dir}/${basename}-${nant.settings.currentframework}.exe" todir="${install.dir}" />
   </target>
-
-  <target name="install" depends="build-release" description="Copy a relase build to Z:/.bin/">
-  <copy file="${build.dir}/${basename}.exe" todir="Z:/.bin" />
-  </target>
-  
-  <target name="package">
-  <tstamp property="build.date" pattern="yyyyMMdd" verbose="true" />
-    <zip zipfile="mudclient-[${assemblyname::get-version(assemblyname::get-assembly-name('bin/mudclient.exe'))}].zip" verbose="true">
-      <fileset basedir="${build.dir}" prefix="bin">
-        <include name="**/*.exe" />
-      </fileset>
-      <fileset basedir="doc" prefix="doc">
-        <include name="**/*.chm" />
-        <include name="**/*.txt" />
-      </fileset>
-	  <fileset basedir="src" prefix="src">
-        <include name="**/*.cs" />
-      </fileset>
-	  <fileset>
-		<include name="*.build" />
-	  </fileset>
-    </zip>
-  </target>
-
+ 
 </project>
