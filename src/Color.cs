@@ -21,7 +21,7 @@ namespace mudclient
             White
         }
 		
-		public static Regex RE = new Regex(@"\u001B\[\d{1,2}m|\u001B\[\{1,2};\d{1,2}m|\u001B\[\d{1,2};\d{1,2};\d{1,2}m",RegexOptions.Compiled);
+		public static Regex RE = new Regex(@"(\u001B\[\d{1,2}m)|(\u001B\[\{1,2};\d{1,2}m)|(\u001B\[\d{1,2};\d{1,2};\d{1,2}m)|(\s+)|(\n)|(.*)",RegexOptions.Compiled);
 
         #endregion Fields
 
@@ -31,12 +31,10 @@ namespace mudclient
             Message = Message.Replace("\r\n\0", Environment.NewLine);
             //Regex RE = new Regex(@"(\e\[\d{1,2}m)|([\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Pc}\p{Zs}\p{Pe}\p{Pd}\p{Ps}\p{Cn}\p{Po}]+)|(\s+)|(\n)", RegexOptions.Compiled);
             MatchCollection matches = RE.Matches(Message);
-
-			Console.Write(Message);
 			
             foreach (Match match in matches)
             {
-                if (match.Value[0] == '\u001B')
+                if (!String.IsNullOrEmpty(match.Value) && match.Value[0] == '\u001B')
                     ParseMatch(match.Value);
                 else
                     Console.Write(match.Value);

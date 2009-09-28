@@ -21,15 +21,10 @@ namespace mudclient
         static void Main(string[] args)
         {
             Setup(); 
-            //Console.WriteLine("{0} - {1}\n{2}\n", Name.ToUpper(), Description, VersionTag);
-
-            _host = "127.0.0.1";
-            _port = "4000";
-
+			
             switch (args.Length)
             {
                 case 0:
-                    // PrintError("No arguments defined defaulting to {0}:{1}.\n",_host,_port);
                     PrintError("No arguments passed try `{0} [hostname] [port]`", Name);
                     return;
                 case 1:
@@ -94,8 +89,13 @@ namespace mudclient
             }
         }
 
+		static void Server_MessageReceived_Unix(object sender, Network.NetworkStateArgs e)
+		{
+			Console.Write(e.Message);
+		}
         static void Server_MessageReceived(object sender, Network.NetworkStateArgs e)
         {
+			
             Color.ParseColor(e.Message);
         }
         static void Server_NetworkStateChange(object sender, Network.NetworkStateArgs e)
@@ -163,7 +163,10 @@ namespace mudclient
             using (Server = new Network(_host, _port))
             {
                 Server.NetworkStateChange   += new EventHandler<Network.NetworkStateArgs>(Server_NetworkStateChange);
-                Server.MessageReceived      += new EventHandler<Network.NetworkStateArgs>(Server_MessageReceived);
+				if(Environment.OSVersion.Platform != PlatformID.Unix)
+                	Server.MessageReceived      += new EventHandler<Network.NetworkStateArgs>(Server_MessageReceived);
+				else
+					Server.MessageReceived      += new EventHandler<Network.NetworkStateArgs>(Server_MessageReceived_Unix);
                 Server.Listen();
             }
 
@@ -171,7 +174,7 @@ namespace mudclient
         }
 
         #endregion Connection Manipulation
-
+		
         #region Configuration
 
         static void Print(String Message, params Object[] options)
@@ -182,8 +185,9 @@ namespace mudclient
         static void PrintError(String Message, params Object[] options)
         {
             Console.BackgroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine(Message, options);
+            Console.Write(Message, options);
             Console.ResetColor();
+			Console.WriteLine();
         }
 
 
