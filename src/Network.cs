@@ -29,6 +29,8 @@ namespace mudclient
         private TcpClient _tcpclient;
         private NetworkStream _networkstream;
 
+	private String shit @"shit";
+
         private Boolean _connected;
 
         #endregion Fields
@@ -88,8 +90,10 @@ namespace mudclient
         private void Read()
         {
             StringBuilder sb = new StringBuilder();
+
             while (_networkstream.DataAvailable)
                 sb.Append(Convert.ToChar(_networkstream.ReadByte()));
+
             if (sb.ToString() != String.Empty)
                 RaiseMessageReceived(sb.ToString());
         }
@@ -201,7 +205,7 @@ namespace mudclient
                 this._networkstream.Dispose();
                 this._networkstream = null;
             }
-            
+
             if (this._tcpclient != null)
             {
                 this._tcpclient.Close();
@@ -209,8 +213,9 @@ namespace mudclient
             }
 
             RaiseNetworkStateChange(NetworkStates.Disconnected, "Server Object has been disposed.");
+	    GC.SuppressFinalize(this);
         }
 
-        #endregion
+        #endregion IDisposable Members
     }
 }
